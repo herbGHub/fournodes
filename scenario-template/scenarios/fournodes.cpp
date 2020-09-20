@@ -38,18 +38,18 @@ namespace ns3 {
 		// Installing applications
 
 		// Consumer0
-		ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+		ndn::AppHelper consumerHelper0("ns3::ndn::ConsumerCbr");
 		// Consumer will request /prefix/0, /prefix/1, ...
-		consumerHelper.SetPrefix("/prefix");
-		consumerHelper.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
-		consumerHelper.Install(nodes.Get(0));                        // first node
+		consumerHelper0.SetPrefix("/prefix");
+		consumerHelper0.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
+		consumerHelper0.Install(nodes.Get(0));                        // first node
 
 		// Consumer1
-		ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+		ndn::AppHelper consumerHelper2("ns3::ndn::ConsumerCbr");
 		// Consumer will request /prefix/0, /prefix/1, ...
-		consumerHelper.SetPrefix("/prefix");
-		consumerHelper.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
-		consumerHelper.Install(nodes.Get(2));                        // third node
+		consumerHelper2.SetPrefix("/prefix");
+		consumerHelper2.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
+		consumerHelper2.Install(nodes.Get(2));                        // third node
 
 
 		// Producer
@@ -57,6 +57,7 @@ namespace ns3 {
 		// Producer will reply to all requests starting with /prefix
 		producerHelper.SetPrefix("/prefix");
 		producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
+		producerHelper.
 		producerHelper.Install(nodes.Get(3)); // last node
 
 		Simulator::Stop(Seconds(20.0));
