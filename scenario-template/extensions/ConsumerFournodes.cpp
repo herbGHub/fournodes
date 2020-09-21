@@ -1,6 +1,6 @@
 // helloworld-app.cpp
 
-#include "fournodes-app.hpp"
+#include "ConsumerFournodes.hpp"
 
 #include "ns3/ptr.h"
 #include "ns3/log.h"
@@ -12,21 +12,21 @@
 
 #include "ns3/random-variable-stream.h"
 
-NS_LOG_COMPONENT_DEFINE("FournodesApp");
+NS_LOG_COMPONENT_DEFINE("ConsumerFournodes");
 
 namespace ns3 {
 
-NS_OBJECT_ENSURE_REGISTERED(FournodesApp);
+NS_OBJECT_ENSURE_REGISTERED(ConsumerFournodes);
 
 // register NS-3 type
-TypeId FournodesApp::GetTypeId()
+TypeId ConsumerFournodes::GetTypeId()
 {
-  static TypeId tid = TypeId("FournodesApp").SetParent<ndn::App>().AddConstructor<HelloworldApp>();
+  static TypeId tid = TypeId("ConsumerFournodes").SetParent<ndn::App>().AddConstructor<HelloworldApp>();
   return tid;
 }
 
 // Processing upon start of the application
-void FournodesApp::StartApplication()
+void ConsumerFournodes::StartApplication()
 {
   // initialize ndn::App
   ndn::App::StartApplication();
@@ -35,18 +35,18 @@ void FournodesApp::StartApplication()
   //ndn::FibHelper::AddRoute(GetNode(), "/helloworld", m_face, 0);
 
   // Schedule send of first interest
-  Simulator::Schedule(Seconds(1.0), &FournodesApp::SendInterest, this);
+  Simulator::Schedule(Seconds(1.1), &ConsumerFournodes::SendInterest, this);
 }
 
 // Processing when application is stopped
-void FournodesApp::StopApplication()
+void ConsumerFournodes::StopApplication()
 {
   // cleanup ndn::App
   ndn::App::StopApplication();
 }
 
 void
-FournodesApp::SendInterest()
+ConsumerFournodes::SendInterest()
 {
   /////////////////////////////////////
   // Sending one Interest packet out //
@@ -67,26 +67,9 @@ FournodesApp::SendInterest()
   m_appLink->onReceiveInterest(*interest);
 }
 
-// Callback that will be called when Interest arrives
-void FournodesApp::OnInterest(std::shared_ptr<const ndn::Interest> interest)
-{
-  ndn::App::OnInterest(interest);
 
-  NS_LOG_DEBUG("Received Interest packet for " << interest->getName());
-
-  auto data = std::make_shared<ndn::Data>(interest->getName());
-  data->setFreshnessPeriod(ndn::time::milliseconds(1000));
-  data->setContent(std::make_shared< ::ndn::Buffer>(1024));
-
-  ndn::StackHelper::getKeyChain().sign(*data);
-
-  // Call trace (for logging purposes)
-  m_transmittedDatas(data, this, m_face);
-
-  m_appLink->onReceiveData(*data);
-}
 // Callback that will be called when Data arrives
-void FournodesApp::OnData(std::shared_ptr<const ndn::Data> data)
+void ConsumerFournodes::OnData(std::shared_ptr<const ndn::Data> data)
 {
   NS_LOG_DEBUG("Receiving Data packet for " << data->getName());
 }

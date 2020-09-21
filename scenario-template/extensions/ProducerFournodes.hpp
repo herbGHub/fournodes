@@ -1,4 +1,4 @@
-// helloworld-app.hpp
+// ConsumerFournodes.hpp
 
 #ifndef FOURNODES_APP_H_
 #define FOURNODES_APP_H_
@@ -7,7 +7,7 @@
 
 namespace ns3 {
 
-class FournodesApp : public ndn::App {
+class ProducerFournodes : public ndn::App {
 public:
   static TypeId GetTypeId();
   virtual void StartApplication();
@@ -15,11 +15,6 @@ public:
 
   // (overridden from ndn::App) Callback that will be called when Interest arrives
   virtual void OnInterest(std::shared_ptr<const ndn::Interest> interest);
-  virtual void OnData(std::shared_ptr<const ndn::Data> data);
-
-private:
-  void SendInterest();
-};
 
 } // namespace ns3
 
