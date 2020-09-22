@@ -16,6 +16,7 @@ public:
   // (overridden from ndn::App) Callback that will be called when Interest arrives
   virtual void OnInterest(std::shared_ptr<const ndn::Interest> interest);
 
+};
 } // namespace ns3
 
 #endif // FOURNODES_APP_H_
