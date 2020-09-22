@@ -21,7 +21,7 @@ NS_OBJECT_ENSURE_REGISTERED(ProducerFournodes);
 // register NS-3 type
 TypeId ProducerFournodes::GetTypeId()
 {
-  static TypeId tid = TypeId("ProducerFournodes").SetParent<ndn::App>().AddConstructor<HelloworldApp>();
+  static TypeId tid = TypeId("ProducerFournodes").SetParent<ndn::App>().AddConstructor<ProducerFournodes>();
   return tid;
 }
 
@@ -35,7 +35,7 @@ void ProducerFournodes::StartApplication()
   ndn::FibHelper::AddRoute(GetNode(), "/prefix", m_face, 0);
 
   // Schedule send of first interest
-  Simulator::Schedule(Seconds(1.0), &ProducerFournodes::SendInterest, this);
+  //Simulator::Schedule(Seconds(1.0), &ProducerFournodes::SendInterest, this);
 }
 
 // Processing when application is stopped

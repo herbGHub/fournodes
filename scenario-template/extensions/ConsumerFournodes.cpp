@@ -21,7 +21,7 @@ NS_OBJECT_ENSURE_REGISTERED(ConsumerFournodes);
 // register NS-3 type
 TypeId ConsumerFournodes::GetTypeId()
 {
-  static TypeId tid = TypeId("ConsumerFournodes").SetParent<ndn::App>().AddConstructor<HelloworldApp>();
+  static TypeId tid = TypeId("ConsumerFournodes").SetParent<ndn::App>().AddConstructor<ConsumerFournodes>();
   return tid;
 }
 
