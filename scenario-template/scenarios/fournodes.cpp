@@ -35,6 +35,11 @@ namespace ns3 {
 		// 4. Set Forwarding Strategy
 		ndn::StrategyChoiceHelper::Install(nodes, "/", "/localhost/nfd/strategy/multicast");
 
+		//I was trying only with "StrategyChoiceHelper" in multicast and the consumers were droping the data
+		//I saw in the NDNSim Grid example the use of GlobalRoutingHelper, so I tried to install the router in the GlobalRoutingHelper
+		ndn::GlobalRoutingHelper ndnGlobalRoutingHelper;
+		ndnGlobalRoutingHelper.Install( nodes.Get(1));
+
 		// Installing applications
 
 
@@ -63,8 +68,17 @@ namespace ns3 {
 		// Producer will reply to all requests starting with /prefix
 		//producerHelper.SetPrefix("/prefix");
 		//producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
-		//producerHelper.
-		producerHelper.Install(nodes.Get(3)); // last node
+
+		ApplicationContainer app3 = producerHelper.Install(nodes.Get(3)); // last node
+
+
+		// Add /prefix origins to ndn::GlobalRouter
+  		ndnGlobalRoutingHelper.AddOrigins("/prefix", nodes.Get(3));
+
+  		// Calculate and install FIBs
+		ndn::GlobalRoutingHelper::CalculateRoutes();
+
+		app3.Start (Seconds (1.0));
 
 		Simulator::Stop(Seconds(20.0));
 
@@ -72,11 +86,6 @@ namespace ns3 {
 		Simulator::Destroy();
 
 		 return 0;
-
-
-
-
-
 
 	}
 }

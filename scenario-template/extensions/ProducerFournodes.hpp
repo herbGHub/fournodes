@@ -1,4 +1,4 @@
-// ConsumerFournodes.hpp
+// ProducerFournodes.hpp
 
 #ifndef FOURNODES_APP_H_
 #define FOURNODES_APP_H_

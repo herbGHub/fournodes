@@ -13,7 +13,7 @@ public:
   virtual void StartApplication();
   virtual void StopApplication();
 
-  // (overridden from ndn::App) Callback that will be called when Interest arrives
+  // (overridden from ndn::App) Callback that will be called when Data arrives
   virtual void OnData(std::shared_ptr<const ndn::Data> data);
 
 private:

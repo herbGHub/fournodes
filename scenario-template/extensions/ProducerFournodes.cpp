@@ -1,4 +1,4 @@
-// helloworld-app.cpp
+// ProducerFournodes.cpp
 
 #include "ProducerFournodes.hpp"
 
@@ -31,11 +31,9 @@ void ProducerFournodes::StartApplication()
   // initialize ndn::App
   ndn::App::StartApplication();
 
-  // Add entry to FIB for `/helloworld`
+  // Add entry to FIB for `/prefix`
   ndn::FibHelper::AddRoute(GetNode(), "/prefix", m_face, 0);
 
-  // Schedule send of first interest
-  //Simulator::Schedule(Seconds(1.0), &ProducerFournodes::SendInterest, this);
 }
 
 // Processing when application is stopped
@@ -58,6 +56,8 @@ void ProducerFournodes::OnInterest(std::shared_ptr<const ndn::Interest> interest
   data->setContent(std::make_shared< ::ndn::Buffer>(1024));
 
   ndn::StackHelper::getKeyChain().sign(*data);
+
+  NS_LOG_DEBUG("Sending Data packet for " << data->getName());
 
   // Call trace (for logging purposes)
   m_transmittedDatas(data, this, m_face);
