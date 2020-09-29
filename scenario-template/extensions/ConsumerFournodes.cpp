@@ -1,4 +1,4 @@
-// helloworld-app.cpp
+// ConsumerFournodes.cpp
 
 #include "ConsumerFournodes.hpp"
 
@@ -31,11 +31,11 @@ void ConsumerFournodes::StartApplication()
   // initialize ndn::App
   ndn::App::StartApplication();
 
-  // Add entry to FIB for `/helloworld`
-  //ndn::FibHelper::AddRoute(GetNode(), "/helloworld", m_face, 0);
+  //Not necessary in the consumer (I think)
+ //ndn::FibHelper::AddRoute(GetNode(), "/prefix", m_face, 0);
 
   // Schedule send of first interest
-  Simulator::Schedule(Seconds(1.1), &ConsumerFournodes::SendInterest, this);
+  Simulator::Schedule(Seconds(2.0), &ConsumerFournodes::SendInterest, this);
 }
 
 // Processing when application is stopped
@@ -53,11 +53,12 @@ ConsumerFournodes::SendInterest()
   /////////////////////////////////////
 
   // Create and configure ndn::Interest
+
   auto interest = std::make_shared<ndn::Interest>("/prefix");
   Ptr<UniformRandomVariable> rand = CreateObject<UniformRandomVariable>();
   interest->setNonce(rand->GetValue(0, std::numeric_limits<uint32_t>::max()));
   interest->setCanBePrefix(false);
-  interest->setInterestLifetime(ndn::time::seconds(1));
+  interest->setInterestLifetime(ndn::time::seconds(60));
 
   NS_LOG_DEBUG("Sending Interest packet for " << *interest);
 

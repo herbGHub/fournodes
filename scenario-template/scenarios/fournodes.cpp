@@ -22,66 +22,55 @@ namespace ns3 {
 		NodeContainer nodes;
 		nodes.Create (numNodes);
 
+		// Create topology p2p
 		PointToPointHelper p2p;
 		p2p.Install(nodes.Get(0), nodes.Get(1));
 		p2p.Install(nodes.Get(1), nodes.Get(2));
 		p2p.Install(nodes.Get(1), nodes.Get(3));
 
-		// 3. Install NDN stack on all nodes
+		// Install NDN stack on all nodes
 		ndn::StackHelper ndnHelper;
 		ndnHelper.SetDefaultRoutes(true);
 		ndnHelper.Install(nodes);
 
-		// 4. Set Forwarding Strategy
+		// Set Forwarding Strategy
 		ndn::StrategyChoiceHelper::Install(nodes, "/", "/localhost/nfd/strategy/multicast");
 
-		//I was trying only with "StrategyChoiceHelper" in multicast and the consumers were droping the data
-		//I saw in the NDNSim Grid example the use of GlobalRoutingHelper, so I tried to install the router in the GlobalRoutingHelper
+		// I was trying only with "StrategyChoiceHelper" in multicast and the consumers were droping the data
+		// I saw in the NDNSim Grid example the use of GlobalRoutingHelper, so I tried to install the router in the GlobalRoutingHelper
+		// Bu I don't undestand why
 		ndn::GlobalRoutingHelper ndnGlobalRoutingHelper;
 		ndnGlobalRoutingHelper.Install( nodes.Get(1));
 
 		// Installing applications
 
-
-
-
-		// Consumer0
-		//ndn::AppHelper consumerHelper0("ns3::ndn::ConsumerCbr");
-		// Consumer will request /prefix/0, /prefix/1, ...
+		// Consumer 0
+		// Consumer will request /prefix
 		ndn::AppHelper consumerHelper0("ConsumerFournodes");
-		//consumerHelper0.SetPrefix("/prefix");
-		//consumerHelper0.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
+		consumerHelper0.Install(nodes.Get(0));                        		// first node
 
-		consumerHelper0.Install(nodes.Get(0));                        // first node
-
-		// Consumer1
-		ndn::AppHelper consumerHelper2("ConsumerFournodes");
+		// Consumer 1
 		// Consumer will request /prefix/0, /prefix/1, ...
-		//consumerHelper2.SetPrefix("/prefix");
-		//consumerHelper2.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
-		consumerHelper2.Install(nodes.Get(2));                        // third node
-
+		ndn::AppHelper consumerHelper2("ConsumerFournodes");
+		consumerHelper2.Install(nodes.Get(2));                        		// third node
 
 		// Producer
-		//ndn::AppHelper producerHelper("ns3::ndn::Producer");
-		ndn::AppHelper producerHelper("ProducerFournodes");
 		// Producer will reply to all requests starting with /prefix
-		//producerHelper.SetPrefix("/prefix");
-		//producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
-
-		ApplicationContainer app3 = producerHelper.Install(nodes.Get(3)); // last node
-
+		ndn::AppHelper producerHelper("ProducerFournodes");
+		//ApplicationContainer app3 = producerHelper.Install(nodes.Get(3));
+		producerHelper.Install(nodes.Get(3)); 						  		// last node
 
 		// Add /prefix origins to ndn::GlobalRouter
+		// I don't undesrtand. I think that only the router (node 1) should be added in global routing
   		ndnGlobalRoutingHelper.AddOrigins("/prefix", nodes.Get(3));
 
   		// Calculate and install FIBs
 		ndn::GlobalRoutingHelper::CalculateRoutes();
 
-		app3.Start (Seconds (1.0));
+		//Not necessary
+		//app3.Start (Seconds (1.0));
 
 		Simulator::Stop(Seconds(20.0));
-
 		Simulator::Run();
 		Simulator::Destroy();
 
